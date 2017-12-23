@@ -19,7 +19,20 @@
 
 BINARY = cdcacm
 
-LDSCRIPT = ../stm32-h103.ld
+LDSCRIPT = bluepill.ld
 
-include ../../Makefile.include
+.PHONY: libopencm3
+libopencm3:
+	if [ ! -f libopencm3/Makefile ]; then \
+        git submodule init; \
+        git submodule update; \
+    fi
+	$(MAKE) -C libopencm3 lib/stm32/f1
 
+LIBNAME		= opencm3_stm32f1
+DEFS		+= -DSTM32F1
+
+FP_FLAGS	?= -msoft-float
+ARCH_FLAGS	= -mthumb -mcpu=cortex-m3 $(FP_FLAGS) -mfix-cortex-m3-ldrd
+
+include rules.mk
