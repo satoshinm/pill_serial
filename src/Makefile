@@ -1,4 +1,4 @@
-PROBE_HOST ?= native
+PROBE_HOST ?= stlink
 PLATFORM_DIR = platforms/$(PROBE_HOST)
 VPATH += $(PLATFORM_DIR) platforms/common target
 ENABLE_DEBUG ?=
