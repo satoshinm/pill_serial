@@ -87,13 +87,13 @@ void platform_request_boot(void);
 #define IRQ_PRI_USB_VBUS	(14 << 4)
 #define IRQ_PRI_TIM3		(0 << 4)
 
-#define USBUSART USART2
-#define USBUSART_CR1 USART2_CR1
-#define USBUSART_IRQ NVIC_USART2_IRQ
-#define USBUSART_CLK RCC_USART2
+#define USBUSART USART1
+#define USBUSART_CR1 USART1_CR1
+#define USBUSART_IRQ NVIC_USART1_IRQ
+#define USBUSART_CLK RCC_USART1
 #define USBUSART_PORT GPIOA
-#define USBUSART_TX_PIN GPIO2
-#define USBUSART_ISR usart2_isr
+#define USBUSART_TX_PIN GPIO9
+#define USBUSART_ISR usart1_isr
 #define USBUSART_TIM TIM4
 #define USBUSART_TIM_CLK_EN() rcc_periph_clock_enable(RCC_TIM4)
 #define USBUSART_TIM_IRQ NVIC_TIM4_IRQ
