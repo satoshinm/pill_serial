@@ -24,11 +24,7 @@
 #	error "Include 'general.h' instead"
 #endif
 
-#if defined(LIBFTDI)
-void platform_init(int argc, char **argv);
-#else
 void platform_init(void);
-#endif
 
 typedef struct platform_timeout platform_timeout;
 void platform_timeout_set(platform_timeout *t, uint32_t ms);
