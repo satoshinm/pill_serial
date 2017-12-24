@@ -20,7 +20,6 @@ CFLAGS += -DENABLE_DEBUG
 endif
 
 SRC =			\
-	hex_utils.c	\
 	main.c		\
 	platform.c	\
 
