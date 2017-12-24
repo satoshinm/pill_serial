@@ -37,7 +37,6 @@
 uint8_t running_status;
 
 uint16_t led_idle_run;
-uint16_t srst_pin;
 static uint32_t rev;
 
 int platform_hwversion(void)
@@ -56,21 +55,9 @@ void platform_init(void)
 	rcc_clock_setup_in_hse_8mhz_out_72mhz();
 	if (rev == 0) {
 		led_idle_run = GPIO8;
-		srst_pin = SRST_PIN_V1;
 	} else {
 		led_idle_run = GPIO9;
-		srst_pin = SRST_PIN_V2;
 	}
-	/* Setup GPIO ports */
-	gpio_set_mode(TMS_PORT, GPIO_MODE_OUTPUT_50_MHZ,
-	              GPIO_CNF_OUTPUT_PUSHPULL, TMS_PIN);
-	gpio_set_mode(TCK_PORT, GPIO_MODE_OUTPUT_50_MHZ,
-	              GPIO_CNF_OUTPUT_PUSHPULL, TCK_PIN);
-	gpio_set_mode(TDI_PORT, GPIO_MODE_OUTPUT_50_MHZ,
-	              GPIO_CNF_OUTPUT_PUSHPULL, TDI_PIN);
-	gpio_set(SRST_PORT, srst_pin);
-	gpio_set_mode(SRST_PORT, GPIO_MODE_OUTPUT_50_MHZ,
-	              GPIO_CNF_OUTPUT_OPENDRAIN, srst_pin);
 
 	gpio_set_mode(LED_PORT, GPIO_MODE_OUTPUT_2_MHZ,
 	              GPIO_CNF_OUTPUT_PUSHPULL, led_idle_run);
@@ -86,22 +73,4 @@ void platform_init(void)
 	/* Don't enable UART if we're being debugged. */
 	if (!(SCS_DEMCR & SCS_DEMCR_TRCENA))
 		usbuart_init();
-}
-
-void platform_srst_set_val(bool assert)
-{
-	if (assert)
-		gpio_clear(SRST_PORT, srst_pin);
-	else
-		gpio_set(SRST_PORT, srst_pin);
-}
-
-bool platform_srst_get_val()
-{
-	return gpio_get(SRST_PORT, srst_pin) == 0;
-}
-
-const char *platform_target_voltage(void)
-{
-	return "unknown";
 }

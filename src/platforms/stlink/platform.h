@@ -39,44 +39,13 @@
 #endif
 
 #define BOARD_IDENT       "Black Magic Probe (STLINK), (Firmware " FIRMWARE_VERSION ")"
-#define BOARD_IDENT_DFU   "Black Magic (Upgrade) for STLink/Discovery, (Firmware " FIRMWARE_VERSION ")"
-#define BOARD_IDENT_UPD   "Black Magic (DFU Upgrade) for STLink/Discovery, (Firmware " FIRMWARE_VERSION ")"
 #define DFU_IDENT         "Black Magic Firmware Upgrade (STLINK)"
 #define UPD_IFACE_STRING  "@Internal Flash   /0x08000000/8*001Kg"
-
-/* Hardware definitions... */
-#define TDI_PORT	GPIOA
-#define TMS_PORT	GPIOB
-#define TCK_PORT	GPIOA
-#define TDO_PORT	GPIOA
-#define TDI_PIN		GPIO7
-#define TMS_PIN		GPIO14
-#define TCK_PIN		GPIO5
-#define TDO_PIN		GPIO6
-
-#define SWDIO_PORT 	TMS_PORT
-#define SWCLK_PORT 	TCK_PORT
-#define SWDIO_PIN	TMS_PIN
-#define SWCLK_PIN	TCK_PIN
-
-#define SRST_PORT	GPIOB
-#define SRST_PIN_V1	GPIO1
-#define SRST_PIN_V2	GPIO0
 
 #define LED_PORT	GPIOA
 /* Use PC14 for a "dummy" uart led. So we can observere at least with scope*/
 #define LED_PORT_UART	GPIOC
 #define LED_UART	GPIO14
-
-#define TMS_SET_MODE() \
-	gpio_set_mode(TMS_PORT, GPIO_MODE_OUTPUT_50_MHZ, \
-	              GPIO_CNF_OUTPUT_PUSHPULL, TMS_PIN);
-#define SWDIO_MODE_FLOAT() \
-	gpio_set_mode(SWDIO_PORT, GPIO_MODE_INPUT, \
-	              GPIO_CNF_INPUT_FLOAT, SWDIO_PIN);
-#define SWDIO_MODE_DRIVE() \
-	gpio_set_mode(SWDIO_PORT, GPIO_MODE_OUTPUT_50_MHZ, \
-	              GPIO_CNF_OUTPUT_PUSHPULL, SWDIO_PIN);
 
 #define UART_PIN_SETUP() \
 	gpio_set_mode(USBUSART_PORT, GPIO_MODE_OUTPUT_2_MHZ, \
