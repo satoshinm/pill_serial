@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "general.h"
-#include "morse.h"
 
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/cm3/scb.h>
@@ -49,8 +48,6 @@ void sys_tick_handler(void)
 		gpio_toggle(LED_PORT, LED_IDLE_RUN);
 
 	time_ms += 100;
-
-	SET_ERROR_STATE(morse_update());
 }
 
 uint32_t platform_time_ms(void)

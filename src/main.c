@@ -23,7 +23,6 @@
  */
 
 #include "general.h"
-#include "target.h"
 #include "exception.h"
 
 int
