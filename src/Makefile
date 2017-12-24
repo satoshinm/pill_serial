@@ -20,42 +20,11 @@ CFLAGS += -DENABLE_DEBUG
 endif
 
 SRC =			\
-	adiv5.c		\
-	adiv5_jtagdp.c	\
-	adiv5_swdp.c	\
 	command.c	\
-	cortexa.c	\
-	cortexm.c	\
-	crc32.c		\
-	efm32.c		\
 	exception.c	\
-	gdb_if.c	\
-	gdb_main.c	\
-	gdb_hostio.c	\
-	gdb_packet.c	\
 	hex_utils.c	\
-	jtag_scan.c	\
-	jtagtap.c	\
-	jtagtap_generic.c	\
-	lmi.c		\
-	lpc_common.c	\
-	lpc11xx.c	\
-	lpc15xx.c	\
-	lpc43xx.c	\
-	kinetis.c	\
 	main.c		\
-	morse.c		\
-	nrf51.c		\
 	platform.c	\
-	sam3x.c		\
-	sam4l.c	\
-	samd.c		\
-	stm32f1.c	\
-	stm32f4.c	\
-	stm32l0.c	\
-	stm32l4.c	\
-	swdptap.c	\
-	swdptap_generic.c	\
 	target.c	\
 
 include $(PLATFORM_DIR)/Makefile.inc

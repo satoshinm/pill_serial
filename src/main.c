@@ -23,12 +23,8 @@
  */
 
 #include "general.h"
-#include "gdb_if.h"
-#include "gdb_main.h"
 #include "target.h"
 #include "exception.h"
-#include "gdb_packet.h"
-#include "morse.h"
 
 int
 main(int argc, char **argv)
@@ -42,15 +38,7 @@ main(int argc, char **argv)
 #endif
 
 	while (true) {
-		volatile struct exception e;
-		TRY_CATCH(e, EXCEPTION_ALL) {
-			gdb_main();
-		}
-		if (e.type) {
-			gdb_putpacketz("EFF");
-			target_list_free();
-			morse("TARGET LOST.", 1);
-		}
+        asm("nop");
 	}
 
 	/* Should never get here */
