@@ -43,7 +43,6 @@
 usbd_device * usbdev;
 
 static int configured;
-static int cdcacm_gdb_dtr = 1;
 
 static void cdcacm_set_modem_state(usbd_device *dev, int iface, bool dsr, bool dcd);
 
@@ -374,13 +373,8 @@ static int cdcacm_control_request(usbd_device *dev,
 	switch(req->bRequest) {
 	case USB_CDC_REQ_SET_CONTROL_LINE_STATE:
 		cdcacm_set_modem_state(dev, req->wIndex, true, true);
-		/* Ignore if not for GDB interface */
-		if(req->wIndex != 0)
-			return 1;
-
-		cdcacm_gdb_dtr = req->wValue & 1;
-
-		return 1;
+		/* Ignore since is not for GDB interface */
+        return 1;
 	case USB_CDC_REQ_SET_LINE_CODING:
 		if(*len < sizeof(struct usb_cdc_line_coding))
 			return 0;
@@ -420,11 +414,6 @@ static int cdcacm_control_request(usbd_device *dev,
 int cdcacm_get_config(void)
 {
 	return configured;
-}
-
-int cdcacm_get_dtr(void)
-{
-	return cdcacm_gdb_dtr;
 }
 
 static void cdcacm_set_modem_state(usbd_device *dev, int iface, bool dsr, bool dcd)
