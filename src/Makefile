@@ -1,6 +1,4 @@
 PROBE_HOST ?= stlink
-PLATFORM_DIR = platforms/$(PROBE_HOST)
-VPATH += $(PLATFORM_DIR) platforms/common
 ENABLE_DEBUG ?=
 
 ifneq ($(V), 1)
@@ -12,7 +10,7 @@ OPT_FLAGS ?= -O2
 
 CFLAGS += -Wall -Wextra -Werror -Wno-char-subscripts\
 	$(OPT_FLAGS) -std=gnu99 -g3 -MD \
-	-I. -Iinclude -Iplatforms/common -I$(PLATFORM_DIR)
+	-I. -Iinclude
 LDFLAGS += $(OPT_FLAGS)
 
 ifeq ($(ENABLE_DEBUG), 1)
@@ -23,7 +21,7 @@ SRC =			\
 	main.c		\
 	platform.c	\
 
-include $(PLATFORM_DIR)/Makefile.inc
+include Makefile.inc
 
 OBJ = $(SRC:.c=.o)
 
@@ -48,7 +46,7 @@ blackmagic.elf: include/version.h $(OBJ)
 clean:	host_clean
 	$(Q)echo "  CLEAN"
 	-$(Q)$(RM) -f *.o *.d *~ blackmagic.elf $(HOSTFILES)
-	-$(Q)$(RM) -f platforms/*/*.o platforms/*/*.d mapfile include/version.h
+	-$(Q)$(RM) -f mapfile include/version.h
 
 command.c: include/version.h
 

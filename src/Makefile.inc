@@ -5,10 +5,10 @@ OBJCOPY = $(CROSS_COMPILE)objcopy
 OPT_FLAGS = -Os
 CFLAGS += -mcpu=cortex-m3 -mthumb \
 	-DSTM32F1 -DDISCOVERY_STLINK -I../libopencm3/include \
-	-I platforms/stm32
+	-I .
 LDFLAGS_BOOT := $(LDFLAGS) --specs=nano.specs \
 	-lopencm3_stm32f1 -Wl,--defsym,_stack=0x20005000 \
-	-Wl,-T,platforms/stm32/stlink.ld -nostartfiles -lc \
+	-Wl,-T,stlink.ld -nostartfiles -lc \
 	-Wl,-Map=mapfile -mthumb -mcpu=cortex-m3 -Wl,-gc-sections \
 	-L../libopencm3/lib
 LDFLAGS = $(LDFLAGS_BOOT)
@@ -19,7 +19,7 @@ else
 LDFLAGS += --specs=nosys.specs
 endif
 
-VPATH += platforms/stm32
+VPATH += .
 
 SRC += 	cdcacm.c	\
 	usbuart.c 	\
