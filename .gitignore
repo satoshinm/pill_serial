@@ -5,5 +5,5 @@
 *.map
 *.o
 *.elf
-src/include/version.h
+src/version.h
 src/mapfile
