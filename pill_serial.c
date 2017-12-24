@@ -333,9 +333,6 @@ static usbd_device *usbd_dev = NULL;
     gpio_set_mode(USBUSART_PORT, GPIO_MODE_OUTPUT_2_MHZ, \
                   GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, USBUSART_TX_PIN);
 
-#define USB_DRIVER      st_usbfs_v1_usb_driver
-#define USB_IRQ         NVIC_USB_LP_CAN_RX0_IRQ
-#define USB_ISR         usb_lp_can_rx0_isr
 /* Interrupt priorities.  Low numbers are high priority.
  * For now USART2 preempts USB which may spin while buffer is drained.
  * TIM3 is used for traceswo capture and must be highest priority.
@@ -345,7 +342,8 @@ static usbd_device *usbd_dev = NULL;
 #define IRQ_PRI_USBUSART_TIM    (3 << 4)
 #define IRQ_PRI_USB_VBUS    (14 << 4)
 
-void USB_ISR(void)
+// USB_ISR
+void usb_lp_can_rx0_isr(void)
 {
     usbd_poll(usbd_dev);
 }
@@ -361,8 +359,8 @@ int main(void)
     usbd_dev = usbd_init(&st_usbfs_v1_usb_driver, &dev, &config, usb_strings, 3, usbd_control_buffer, sizeof(usbd_control_buffer));
     usbd_register_set_config_callback(usbd_dev, cdcacm_set_config);
 
-    nvic_set_priority(USB_IRQ, IRQ_PRI_USB);
-    nvic_enable_irq(USB_IRQ);
+    nvic_set_priority(NVIC_USB_LP_CAN_RX0_IRQ, IRQ_PRI_USB);
+    nvic_enable_irq(NVIC_USB_LP_CAN_RX0_IRQ);
 
     for (i = 0; i < 0x800000; i++)
         __asm__("nop");
