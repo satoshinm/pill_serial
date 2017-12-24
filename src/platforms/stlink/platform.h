@@ -43,9 +43,9 @@
 #define UPD_IFACE_STRING  "@Internal Flash   /0x08000000/8*001Kg"
 
 #define LED_PORT	GPIOA
-/* Use PC14 for a "dummy" uart led. So we can observere at least with scope*/
+/* Use PC13 for a "dummy" uart led. So we can observe the LED. */
 #define LED_PORT_UART	GPIOC
-#define LED_UART	GPIO14
+#define LED_UART	GPIO13
 
 #define UART_PIN_SETUP() \
 	gpio_set_mode(USBUSART_PORT, GPIO_MODE_OUTPUT_2_MHZ, \
