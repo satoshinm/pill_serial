@@ -29,7 +29,6 @@
 #include "general.h"
 #include "cdcacm.h"
 #include "usbuart.h"
-#include "serialno.h"
 
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/usb/usbd.h>
@@ -336,6 +335,26 @@ static void cdcacm_set_config(usbd_device *dev, uint16_t wValue)
 
 /* We need a special large control buffer for this device: */
 uint8_t usbd_control_buffer[256];
+
+static char *serialno_read(char *s)
+{
+	volatile uint32_t *unique_id_p = (volatile uint32_t *)0x1FFFF7E8;
+	uint32_t unique_id = *unique_id_p +
+			*(unique_id_p + 1) +
+			*(unique_id_p + 2);
+	int i;
+
+	/* Fetch serial number from chip's unique ID */
+	for(i = 0; i < 8; i++) {
+		s[7-i] = ((unique_id >> (4*i)) & 0xF) + '0';
+	}
+	for(i = 0; i < 8; i++)
+		if(s[i] > '9')
+			s[i] += 'A' - '9' - 1;
+	s[8] = 0;
+
+	return s;
+}
 
 void cdcacm_init(void)
 {

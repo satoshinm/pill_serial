@@ -23,10 +23,6 @@ VPATH += .
 
 SRC += 	cdcacm.c	\
 	usbuart.c 	\
-	serialno.c	\
-	timing.c	\
-	timing_stm32.c	\
-	stlink_common.c \
 
 all:	blackmagic.bin
 

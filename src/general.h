@@ -31,18 +31,11 @@
 #include <inttypes.h>
 
 #include "platform.h"
-#include "platform_support.h"
 
 #ifndef DEBUG
 #include <stdio.h>
 #define DEBUG	printf
 #endif
-
-#define ALIGN(x, n) (((x) + (n) - 1) & ~((n) - 1))
-#undef MIN
-#define MIN(x, y)  (((x) < (y)) ? (x) : (y))
-#undef MAX
-#define MAX(x, y)  (((x) > (y)) ? (x) : (y))
 
 #endif
 

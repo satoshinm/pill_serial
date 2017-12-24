@@ -24,14 +24,38 @@
 #ifndef __PLATFORM_H
 #define __PLATFORM_H
 
-#include "gpio.h"
-#include "timing.h"
-#include "timing_stm32.h"
 #include "version.h"
 
 #include <libopencm3/cm3/common.h>
 #include <libopencm3/stm32/f1/memorymap.h>
+#include <libopencm3/stm32/f1/gpio.h>
 #include <libopencm3/usb/usbd.h>
+
+struct platform_timeout {
+	uint32_t time;
+};
+
+uint32_t platform_time_ms(void);
+
+extern uint8_t running_status;
+
+void platform_timing_init(void);
+
+void platform_init(void);
+
+typedef struct platform_timeout platform_timeout;
+void platform_timeout_set(platform_timeout *t, uint32_t ms);
+bool platform_timeout_is_expired(platform_timeout *t);
+void platform_delay(uint32_t ms);
+
+const char *platform_target_voltage(void);
+int platform_hwversion(void);
+void platform_srst_set_val(bool assert);
+bool platform_srst_get_val(void);
+bool platform_target_get_power(void);
+void platform_target_set_power(bool power);
+void platform_request_boot(void);
+
 
 #ifdef ENABLE_DEBUG
 # define PLATFORM_HAS_DEBUG
@@ -97,6 +121,31 @@ extern uint32_t detect_rev(void);
 #define sprintf siprintf
 #define vasprintf vasiprintf
 #define snprintf sniprintf
+
+#define gpio_set_val(port, pin, val) do {	\
+	if(val)					\
+		gpio_set((port), (pin));	\
+	else					\
+		gpio_clear((port), (pin));	\
+} while(0)
+
+static inline void _gpio_set(uint32_t gpioport, uint16_t gpios)
+{
+	GPIO_BSRR(gpioport) = gpios;
+}
+#define gpio_set _gpio_set
+
+static inline void _gpio_clear(uint32_t gpioport, uint16_t gpios)
+{
+	GPIO_BRR(gpioport) = gpios;
+}
+#define gpio_clear _gpio_clear
+
+static inline uint16_t _gpio_get(uint32_t gpioport, uint16_t gpios)
+{
+	return (uint16_t)GPIO_IDR(gpioport) & gpios;
+}
+#define gpio_get _gpio_get
 
 #endif
 
