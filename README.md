@@ -19,3 +19,6 @@ whereas pill\_serial only provides serial ports.
 
 See also associated blog post: *[Triple USB-to-serial adapter using STM32 blue pill](https://satoshinm.github.io/blog/171223_stm32serial_triple_usb-to-serial_adapter_using_stm32_blue_pill.html)*
 
+---
+
+**[Comments?](https://www.reddit.com/r/stm32f103/comments/7lu2bz/pill_serial_triple_usbtoserial_adapter_firmware/)**
