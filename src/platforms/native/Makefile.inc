@@ -27,12 +27,8 @@ SRC += 	cdcacm.c	\
 	timing.c	\
 	timing_stm32.c	\
 
-all:	blackmagic.bin blackmagic_dfu.bin blackmagic_dfu.hex
-
-blackmagic_dfu: usbdfu.o dfucore.o dfu_f1.o
-	@echo "  LD      $@"
-	$(Q)$(CC) $^ -o $@ $(LDFLAGS_BOOT)
+all:	blackmagic.bin
 
 host_clean:
-	-$(Q)$(RM) -f blackmagic.bin blackmagic_dfu blackmagic_dfu.bin blackmagic_dfu.hex
+	-$(Q)$(RM) -f blackmagic.bin
 
