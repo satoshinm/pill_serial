@@ -62,7 +62,7 @@ include $(PLATFORM_DIR)/Makefile.inc
 
 OBJ = $(SRC:.c=.o)
 
-blackmagic: include/version.h $(OBJ)
+blackmagic.elf: include/version.h $(OBJ)
 	@echo "  LD      $@"
 	$(Q)$(CC) -o $@ $(OBJ) $(LDFLAGS)
 
@@ -70,7 +70,7 @@ blackmagic: include/version.h $(OBJ)
 	@echo "  CC      $<"
 	$(Q)$(CC) $(CFLAGS) -c $< -o $@
 
-%.bin:	%
+%.bin:	%.elf
 	@echo "  OBJCOPY $@"
 	$(Q)$(OBJCOPY) -O binary $^ $@
 
@@ -82,7 +82,7 @@ blackmagic: include/version.h $(OBJ)
 
 clean:	host_clean
 	$(Q)echo "  CLEAN"
-	-$(Q)$(RM) -f *.o *.d *~ blackmagic $(HOSTFILES)
+	-$(Q)$(RM) -f *.o *.d *~ blackmagic.elf $(HOSTFILES)
 	-$(Q)$(RM) -f platforms/*/*.o platforms/*/*.d mapfile include/version.h
 
 all_platforms:

@@ -4,7 +4,6 @@
 *.elf
 *.map
 *.o
-src/blackmagic
-src/blackmagic_dfu
+*.elf
 src/include/version.h
 src/mapfile
