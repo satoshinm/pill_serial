@@ -20,8 +20,6 @@
 
 /* This file implements a the USB Communications Device Class - Abstract
  * Control Model (CDC-ACM) as defined in CDC PSTN subclass 1.2.
- * A Device Firmware Upgrade (DFU 1.1) class interface is provided for
- * field firmware upgrade.
  *
  * The device's unique id is used as the USB serial number string.
  */
@@ -34,10 +32,7 @@
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
 #include <libopencm3/cm3/scb.h>
-#include <libopencm3/usb/dfu.h>
 #include <stdlib.h>
-
-#define DFU_IF_NO 4
 
 usbd_device * usbdev;
 
@@ -165,30 +160,6 @@ static const struct usb_iface_assoc_descriptor uart_assoc = {
 	.iFunction = 0,
 };
 
-const struct usb_dfu_descriptor dfu_function = {
-	.bLength = sizeof(struct usb_dfu_descriptor),
-	.bDescriptorType = DFU_FUNCTIONAL,
-	.bmAttributes = USB_DFU_CAN_DOWNLOAD | USB_DFU_WILL_DETACH,
-	.wDetachTimeout = 255,
-	.wTransferSize = 1024,
-	.bcdDFUVersion = 0x011A,
-};
-
-const struct usb_interface_descriptor dfu_iface = {
-	.bLength = USB_DT_INTERFACE_SIZE,
-	.bDescriptorType = USB_DT_INTERFACE,
-	.bInterfaceNumber = DFU_IF_NO,
-	.bAlternateSetting = 0,
-	.bNumEndpoints = 0,
-	.bInterfaceClass = 0xFE,
-	.bInterfaceSubClass = 1,
-	.bInterfaceProtocol = 1,
-	.iInterface = 6,
-
-	.extra = &dfu_function,
-	.extralen = sizeof(dfu_function),
-};
-
 static const struct usb_interface ifaces[] = {{
 	.num_altsetting = 1,
 	.iface_assoc = &uart_assoc,
@@ -219,19 +190,7 @@ static const char *usb_strings[] = {
 	serial_no,
 	"Black Magic GDB Server",
 	"Black Magic UART Port",
-	DFU_IDENT,
 };
-
-static void dfu_detach_complete(usbd_device *dev, struct usb_setup_data *req)
-{
-	(void)dev;
-	(void)req;
-
-	platform_request_boot();
-
-	/* Reset core to enter bootloader */
-	scb_reset_core();
-}
 
 static int cdcacm_control_request(usbd_device *dev,
 		struct usb_setup_data *req, uint8_t **buf, uint16_t *len,
@@ -260,25 +219,6 @@ static int cdcacm_control_request(usbd_device *dev,
 		default:
 			return 0;
 		}
-	case DFU_GETSTATUS:
-		if(req->wIndex == DFU_IF_NO) {
-			(*buf)[0] = DFU_STATUS_OK;
-			(*buf)[1] = 0;
-			(*buf)[2] = 0;
-			(*buf)[3] = 0;
-			(*buf)[4] = STATE_APP_IDLE;
-			(*buf)[5] = 0;	/* iString not used here */
-			*len = 6;
-
-			return 1;
-		}
-		return 0;
-	case DFU_DETACH:
-		if(req->wIndex == DFU_IF_NO) {
-			*complete = dfu_detach_complete;
-			return 1;
-		}
-		return 0;
 	}
 	return 0;
 }

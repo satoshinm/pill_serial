@@ -63,7 +63,6 @@ void platform_request_boot(void);
 #endif
 
 #define BOARD_IDENT       "Black Magic Probe (STLINK), (Firmware " FIRMWARE_VERSION ")"
-#define DFU_IDENT         "Black Magic Firmware Upgrade (STLINK)"
 #define UPD_IFACE_STRING  "@Internal Flash   /0x08000000/8*001Kg"
 
 #define LED_PORT	GPIOA

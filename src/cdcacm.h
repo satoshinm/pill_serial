@@ -20,8 +20,6 @@
 
 /* This file implements a the USB Communications Device Class - Abstract
  * Control Model (CDC-ACM) as defined in CDC PSTN subclass 1.2.
- * A Device Firmware Upgrade (DFU 1.1) class interface is provided for
- * field firmware upgrade.
  *
  * The device's unique id is used as the USB serial number string.
  */
