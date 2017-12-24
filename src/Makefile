@@ -45,32 +45,12 @@ blackmagic.elf: include/version.h $(OBJ)
 	@echo "  OBJCOPY $@"
 	$(Q)$(OBJCOPY) -O ihex $^ $@
 
-.PHONY:	clean host_clean all_platforms FORCE
+.PHONY:	clean host_clean FORCE
 
 clean:	host_clean
 	$(Q)echo "  CLEAN"
 	-$(Q)$(RM) -f *.o *.d *~ blackmagic.elf $(HOSTFILES)
 	-$(Q)$(RM) -f platforms/*/*.o platforms/*/*.d mapfile include/version.h
-
-all_platforms:
-	$(Q)set -e ;\
-	mkdir -p artifacts/$(shell git describe --always) ;\
-	echo "<html><body><ul>" > artifacts/index.html ;\
-	for i in platforms/*/Makefile.inc ; do \
-		export DIRNAME=`dirname $$i` ;\
-		export PROBE_HOST=`basename $$DIRNAME` ;\
-		export CFLAGS=-Werror ;\
-		echo "Building for hardware platform: $$PROBE_HOST" ;\
-		$(MAKE) $(MAKEFLAGS) clean ;\
-		$(MAKE) $(MAKEFLAGS);\
-		if [ -f blackmagic.bin ]; then \
-			mv blackmagic.bin artifacts/blackmagic-$$PROBE_HOST.bin ;\
-			echo "<li><a href='blackmagic-$$PROBE_HOST.bin'>$$PROBE_HOST</a></li>"\
-				>> artifacts/index.html ;\
-		fi ;\
-	done ;\
-	echo "</ul></body></html>" >> artifacts/index.html ;\
-	cp artifacts/*.bin artifacts/$(shell git describe --always)
 
 command.c: include/version.h
 
