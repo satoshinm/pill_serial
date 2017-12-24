@@ -32,6 +32,7 @@
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
 #include <libopencm3/cm3/scb.h>
+#include <libopencm3/stm32/usart.h>
 #include <stdlib.h>
 
 usbd_device * usbdev;
@@ -326,9 +327,11 @@ static int cdcacm_control_request(usbd_device *dev,
 			return 0;
 
 		switch(req->wIndex) {
+		case 0:
+			usbuart_set_line_coding((struct usb_cdc_line_coding*)*buf, USART2);
+			return 1;
 		case 2:
-		//case 0: // TODO: set on the other USBUART
-			usbuart_set_line_coding((struct usb_cdc_line_coding*)*buf);
+			usbuart_set_line_coding((struct usb_cdc_line_coding*)*buf, USART3);
 			return 1;
 		default:
 			return 0;
@@ -363,13 +366,13 @@ static void cdcacm_set_config(usbd_device *dev, uint16_t wValue)
 
 	/* Serial interface */
 	usbd_ep_setup(dev, 0x01, USB_ENDPOINT_ATTR_BULK,
-	              CDCACM_PACKET_SIZE, usbuart_usb_out_cb);
+	              CDCACM_PACKET_SIZE, usbuart2_usb_out_cb);
 	usbd_ep_setup(dev, 0x81, USB_ENDPOINT_ATTR_BULK,
 	              CDCACM_PACKET_SIZE, usbuart_usb_in_cb);
 	usbd_ep_setup(dev, 0x82, USB_ENDPOINT_ATTR_INTERRUPT, 16, NULL);
 
 	usbd_ep_setup(dev, 0x03, USB_ENDPOINT_ATTR_BULK,
-	              CDCACM_PACKET_SIZE, usbuart_usb_out_cb);
+	              CDCACM_PACKET_SIZE, usbuart3_usb_out_cb);
 	usbd_ep_setup(dev, 0x83, USB_ENDPOINT_ATTR_BULK,
 	              CDCACM_PACKET_SIZE, usbuart_usb_in_cb);
 	usbd_ep_setup(dev, 0x84, USB_ENDPOINT_ATTR_INTERRUPT, 16, NULL);

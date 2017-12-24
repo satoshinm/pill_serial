@@ -70,34 +70,16 @@ void platform_request_boot(void);
 #define LED_PORT_UART	GPIOC
 #define LED_UART	GPIO13
 
-#define UART_PIN_SETUP() \
-	gpio_set_mode(USBUSART_PORT, GPIO_MODE_OUTPUT_2_MHZ, \
-	              GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, USBUSART_TX_PIN);
-
 #define USB_DRIVER      st_usbfs_v1_usb_driver
 #define USB_IRQ	        NVIC_USB_LP_CAN_RX0_IRQ
 #define USB_ISR	        usb_lp_can_rx0_isr
 /* Interrupt priorities.  Low numbers are high priority.
  * For now USART2 preempts USB which may spin while buffer is drained.
- * TIM3 is used for traceswo capture and must be highest priority.
  */
 #define IRQ_PRI_USB		(2 << 4)
 #define IRQ_PRI_USBUSART	(1 << 4)
 #define IRQ_PRI_USBUSART_TIM	(3 << 4)
 #define IRQ_PRI_USB_VBUS	(14 << 4)
-#define IRQ_PRI_TIM3		(0 << 4)
-
-#define USBUSART USART3
-#define USBUSART_CR1 USART3_CR1
-#define USBUSART_IRQ NVIC_USART3_IRQ
-#define USBUSART_CLK RCC_USART3
-#define USBUSART_PORT GPIOB
-#define USBUSART_TX_PIN GPIO10
-#define USBUSART_ISR usart3_isr
-#define USBUSART_TIM TIM4
-#define USBUSART_TIM_CLK_EN() rcc_periph_clock_enable(RCC_TIM4)
-#define USBUSART_TIM_IRQ NVIC_TIM4_IRQ
-#define USBUSART_TIM_ISR tim4_isr
 
 #ifdef ENABLE_DEBUG
 extern bool debug_bmp;

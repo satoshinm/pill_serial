@@ -30,9 +30,6 @@
 
 #define CDCACM_PACKET_SIZE 	64
 
-#define CDCACM_GDB_ENDPOINT	1
-#define CDCACM_UART_ENDPOINT	3
-
 extern usbd_device *usbdev;
 
 void cdcacm_init(void);
