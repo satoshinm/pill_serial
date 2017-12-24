@@ -43,14 +43,14 @@ else
 LDFLAGS += --specs=nosys.specs
 endif
 
-all:	blackmagic.bin
+all:	pill_serial.bin
 
 host_clean:
-	-$(Q)$(RM) blackmagic.bin
+	-$(Q)$(RM) pill_serial.bin
 
 OBJ = $(SRC:.c=.o)
 
-blackmagic.elf: version.h $(OBJ)
+pill_serial.elf: version.h $(OBJ)
 	@echo "  LD      $@"
 	$(Q)$(CC) -o $@ $(OBJ) $(LDFLAGS)
 
@@ -70,7 +70,7 @@ blackmagic.elf: version.h $(OBJ)
 
 clean:	host_clean
 	$(Q)echo "  CLEAN"
-	-$(Q)$(RM) -f *.o *.d *~ blackmagic.elf $(HOSTFILES)
+	-$(Q)$(RM) -f *.o *.d *~ *.elf *.bin $(HOSTFILES)
 	-$(Q)$(RM) -f mapfile version.h
 
 version.h: FORCE
