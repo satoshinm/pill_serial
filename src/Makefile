@@ -20,7 +20,6 @@ CFLAGS += -DENABLE_DEBUG
 endif
 
 SRC =			\
-	command.c	\
 	exception.c	\
 	hex_utils.c	\
 	main.c		\
