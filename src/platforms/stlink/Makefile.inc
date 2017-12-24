@@ -11,7 +11,7 @@ LDFLAGS_BOOT := $(LDFLAGS) --specs=nano.specs \
 	-Wl,-T,platforms/stm32/stlink.ld -nostartfiles -lc \
 	-Wl,-Map=mapfile -mthumb -mcpu=cortex-m3 -Wl,-gc-sections \
 	-L../libopencm3/lib
-LDFLAGS = $(LDFLAGS_BOOT) -Wl,-Ttext=0x8002000
+LDFLAGS = $(LDFLAGS_BOOT)
 
 ifeq ($(ENABLE_DEBUG), 1)
 LDFLAGS += --specs=rdimon.specs
