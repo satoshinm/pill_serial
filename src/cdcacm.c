@@ -214,8 +214,6 @@ static int cdcacm_control_request(usbd_device *dev,
 		case 2:
 			usbuart_set_line_coding((struct usb_cdc_line_coding*)*buf);
 			return 1;
-		case 0:
-			return 1; /* Ignore on GDB Port */
 		default:
 			return 0;
 		}
@@ -247,13 +245,6 @@ static void cdcacm_set_config(usbd_device *dev, uint16_t wValue)
 {
 	configured = wValue;
 
-	/* GDB interface */
-	usbd_ep_setup(dev, 0x01, USB_ENDPOINT_ATTR_BULK,
-	              CDCACM_PACKET_SIZE, NULL);
-	usbd_ep_setup(dev, 0x81, USB_ENDPOINT_ATTR_BULK,
-	              CDCACM_PACKET_SIZE, NULL);
-	usbd_ep_setup(dev, 0x82, USB_ENDPOINT_ATTR_INTERRUPT, 16, NULL);
-
 	/* Serial interface */
 	usbd_ep_setup(dev, 0x03, USB_ENDPOINT_ATTR_BULK,
 	              CDCACM_PACKET_SIZE, usbuart_usb_out_cb);
@@ -269,7 +260,6 @@ static void cdcacm_set_config(usbd_device *dev, uint16_t wValue)
 	/* Notify the host that DCD is asserted.
 	 * Allows the use of /dev/tty* devices on *BSD/MacOS
 	 */
-	cdcacm_set_modem_state(dev, 0, true, true);
 	cdcacm_set_modem_state(dev, 2, true, true);
 }
 
