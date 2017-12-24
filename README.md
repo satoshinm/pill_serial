@@ -16,3 +16,6 @@ These correspond to the three USART ports available on the board, in order:
 This code is heavily based on the [Black Magic Debug Probe firmware](https://github.com/blacksphere/blackmagic).
 Note if you only need one serial port, you may be better off using the Black Magic Probe, since it also provides a JTAG/SWD probe,
 whereas pill\_serial only provides serial ports.
+
+See also associated blog post: *[Triple USB-to-serial adapter using STM32 blue pill](https://satoshinm.github.io/blog/171223_stm32serial_triple_usb-to-serial_adapter_using_stm32_blue_pill.html)*
+
