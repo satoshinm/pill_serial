@@ -1,6 +1,6 @@
 PROBE_HOST ?= stlink
 PLATFORM_DIR = platforms/$(PROBE_HOST)
-VPATH += $(PLATFORM_DIR) platforms/common target
+VPATH += $(PLATFORM_DIR) platforms/common
 ENABLE_DEBUG ?=
 
 ifneq ($(V), 1)
@@ -24,7 +24,6 @@ SRC =			\
 	hex_utils.c	\
 	main.c		\
 	platform.c	\
-	target.c	\
 
 include $(PLATFORM_DIR)/Makefile.inc
 
