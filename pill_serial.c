@@ -21,6 +21,8 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/usart.h>
+#include <libopencm3/cm3/nvic.h>
+#include <libopencm3/cm3/scb.h>
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
 
@@ -304,11 +306,53 @@ static void gpio_setup(void)
     gpio_set(GPIOC, GPIO13);
 }
 
+static usbd_device *usbd_dev = NULL;
+
+// based on https://github.com/blacksphere/blackmagic/blob/master/src/platforms/stlink/platform.h#L86
+/*
+ * This file is part of the Black Magic Debug project.
+ *
+ * Copyright (C) 2011  Black Sphere Technologies Ltd.
+ * Written by Gareth McMullin <gareth@blacksphere.co.nz>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#define UART_PIN_SETUP() \
+    gpio_set_mode(USBUSART_PORT, GPIO_MODE_OUTPUT_2_MHZ, \
+                  GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, USBUSART_TX_PIN);
+
+#define USB_DRIVER      st_usbfs_v1_usb_driver
+#define USB_IRQ         NVIC_USB_LP_CAN_RX0_IRQ
+#define USB_ISR         usb_lp_can_rx0_isr
+/* Interrupt priorities.  Low numbers are high priority.
+ * For now USART2 preempts USB which may spin while buffer is drained.
+ * TIM3 is used for traceswo capture and must be highest priority.
+ */
+#define IRQ_PRI_USB     (2 << 4)
+#define IRQ_PRI_USBUSART    (1 << 4)
+#define IRQ_PRI_USBUSART_TIM    (3 << 4)
+#define IRQ_PRI_USB_VBUS    (14 << 4)
+
+void USB_ISR(void)
+{
+    usbd_poll(usbd_dev);
+}
+
 int main(void)
 {
     int i;
-
-    usbd_device *usbd_dev;
 
     clock_setup();
     gpio_setup();
@@ -317,14 +361,12 @@ int main(void)
     usbd_dev = usbd_init(&st_usbfs_v1_usb_driver, &dev, &config, usb_strings, 3, usbd_control_buffer, sizeof(usbd_control_buffer));
     usbd_register_set_config_callback(usbd_dev, cdcacm_set_config);
 
+    nvic_set_priority(USB_IRQ, IRQ_PRI_USB);
+    nvic_enable_irq(USB_IRQ);
+
     for (i = 0; i < 0x800000; i++)
         __asm__("nop");
     gpio_clear(GPIOC, GPIO13);
-
-    /* TODO: move to ISR?
-    while (1)
-        usbd_poll(usbd_dev);
-        */
 
     /* Blink the LED (PC13) on the board with every transmitted byte. */
     int j = 0, c = 0;
