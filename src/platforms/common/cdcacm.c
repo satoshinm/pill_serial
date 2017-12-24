@@ -28,9 +28,6 @@
 
 #include "general.h"
 #include "cdcacm.h"
-#if defined(PLATFORM_HAS_TRACESWO)
-#	include "traceswo.h"
-#endif
 #include "usbuart.h"
 #include "serialno.h"
 
@@ -310,42 +307,6 @@ static const struct usb_iface_assoc_descriptor dfu_assoc = {
 	.iFunction = 6,
 };
 
-#if defined(PLATFORM_HAS_TRACESWO)
-static const struct usb_endpoint_descriptor trace_endp[] = {{
-	.bLength = USB_DT_ENDPOINT_SIZE,
-	.bDescriptorType = USB_DT_ENDPOINT,
-	.bEndpointAddress = 0x85,
-	.bmAttributes = USB_ENDPOINT_ATTR_BULK,
-	.wMaxPacketSize = 64,
-	.bInterval = 0,
-}};
-
-const struct usb_interface_descriptor trace_iface = {
-	.bLength = USB_DT_INTERFACE_SIZE,
-	.bDescriptorType = USB_DT_INTERFACE,
-	.bInterfaceNumber = 5,
-	.bAlternateSetting = 0,
-	.bNumEndpoints = 1,
-	.bInterfaceClass = 0xFF,
-	.bInterfaceSubClass = 0xFF,
-	.bInterfaceProtocol = 0xFF,
-	.iInterface = 7,
-
-	.endpoint = trace_endp,
-};
-
-static const struct usb_iface_assoc_descriptor trace_assoc = {
-	.bLength = USB_DT_INTERFACE_ASSOCIATION_SIZE,
-	.bDescriptorType = USB_DT_INTERFACE_ASSOCIATION,
-	.bFirstInterface = 5,
-	.bInterfaceCount = 1,
-	.bFunctionClass = 0xFF,
-	.bFunctionSubClass = 0xFF,
-	.bFunctionProtocol = 0xFF,
-	.iFunction = 7,
-};
-#endif
-
 static const struct usb_interface ifaces[] = {{
 	.num_altsetting = 1,
 	.iface_assoc = &gdb_assoc,
@@ -364,23 +325,13 @@ static const struct usb_interface ifaces[] = {{
 	.num_altsetting = 1,
 	.iface_assoc = &dfu_assoc,
 	.altsetting = &dfu_iface,
-#if defined(PLATFORM_HAS_TRACESWO)
-}, {
-	.num_altsetting = 1,
-	.iface_assoc = &trace_assoc,
-	.altsetting = &trace_iface,
-#endif
 }};
 
 static const struct usb_config_descriptor config = {
 	.bLength = USB_DT_CONFIGURATION_SIZE,
 	.bDescriptorType = USB_DT_CONFIGURATION,
 	.wTotalLength = 0,
-#if defined(PLATFORM_HAS_TRACESWO)
-	.bNumInterfaces = 6,
-#else
 	.bNumInterfaces = 5,
-#endif
 	.bConfigurationValue = 1,
 	.iConfiguration = 0,
 	.bmAttributes = 0x80,
@@ -389,11 +340,7 @@ static const struct usb_config_descriptor config = {
 	.interface = ifaces,
 };
 
-#if defined(STM32L0) || defined(STM32F3) || defined(STM32F4)
-char serial_no[13];
-#else
 char serial_no[9];
-#endif
 
 static const char *usb_strings[] = {
 	"Black Sphere Technologies",
@@ -402,9 +349,6 @@ static const char *usb_strings[] = {
 	"Black Magic GDB Server",
 	"Black Magic UART Port",
 	DFU_IDENT,
-#if defined(PLATFORM_HAS_TRACESWO)
-	"Black Magic Trace Capture",
-#endif
 };
 
 static void dfu_detach_complete(usbd_device *dev, struct usb_setup_data *req)
@@ -520,12 +464,6 @@ static void cdcacm_set_config(usbd_device *dev, uint16_t wValue)
 	usbd_ep_setup(dev, 0x83, USB_ENDPOINT_ATTR_BULK,
 	              CDCACM_PACKET_SIZE, usbuart_usb_in_cb);
 	usbd_ep_setup(dev, 0x84, USB_ENDPOINT_ATTR_INTERRUPT, 16, NULL);
-
-#if defined(PLATFORM_HAS_TRACESWO)
-	/* Trace interface */
-	usbd_ep_setup(dev, 0x85, USB_ENDPOINT_ATTR_BULK,
-					64, trace_buf_drain);
-#endif
 
 	usbd_register_control_callback(dev,
 			USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
