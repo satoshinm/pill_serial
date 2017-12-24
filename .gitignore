@@ -1,10 +1,10 @@
 *.bin
+*.hex
 *.d
 *.elf
 *.map
 *.o
 src/blackmagic
 src/blackmagic_dfu
-src/blackmagic_dfu.hex
 src/include/version.h
 src/mapfile
