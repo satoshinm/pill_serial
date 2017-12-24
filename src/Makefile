@@ -1,4 +1,3 @@
-PROBE_HOST ?= stlink
 ENABLE_DEBUG ?=
 
 ifneq ($(V), 1)
@@ -33,7 +32,7 @@ CFLAGS += -mcpu=cortex-m3 -mthumb \
 	-I .
 LDFLAGS_BOOT := $(LDFLAGS) --specs=nano.specs \
 	-lopencm3_stm32f1 -Wl,--defsym,_stack=0x20005000 \
-	-Wl,-T,stlink.ld -nostartfiles -lc \
+	-Wl,-T,bluepill.ld -nostartfiles -lc \
 	-Wl,-Map=mapfile -mthumb -mcpu=cortex-m3 -Wl,-gc-sections \
 	-L../libopencm3/lib
 LDFLAGS = $(LDFLAGS_BOOT)
