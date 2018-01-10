@@ -1,6 +1,8 @@
 pill\_serial: USB-to-serial x 3
 ===============================
 
+[![CircleCI](https://circleci.com/gh/satoshinm/pill_serial.svg?style=svg)](https://circleci.com/gh/satoshinm/pill_serial)
+
 Triple USB-to-serial adapter firmware for flashing onto an STM32F103C8T6 "blue pill" minimum development board
 
 Run `make` to build, then flash the `src/pill_serial.bin` file to a blue pill over the PA9/PA10 serial port with BOOT0=1.
