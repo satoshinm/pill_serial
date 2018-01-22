@@ -65,8 +65,11 @@ void platform_request_boot(void);
 #define BOARD_IDENT       "Black Magic Probe (STLINK), (Firmware " FIRMWARE_VERSION ")"
 #define UPD_IFACE_STRING  "@Internal Flash   /0x08000000/8*001Kg"
 
+/* (Optional) LED blinks when running */
 #define LED_PORT	GPIOA
-/* Use PC13 for a "dummy" uart led. So we can observe the LED. */
+#define LED_IDLE_RUN	GPIO8
+
+/* Built-in LED blinks on UART activity */
 #define LED_PORT_UART	GPIOC
 #define LED_UART	GPIO13
 
@@ -88,12 +91,6 @@ int usbuart_debug_write(const char *buf, size_t len);
 #else
 # define DEBUG(...)
 #endif
-
-extern uint16_t led_idle_run;
-#define LED_IDLE_RUN            led_idle_run
-#define SET_RUN_STATE(state)	{running_status = (state);}
-#define SET_IDLE_STATE(state)	{gpio_set_val(LED_PORT, led_idle_run, state);}
-#define SET_ERROR_STATE(x)
 
 extern uint32_t detect_rev(void);
 
