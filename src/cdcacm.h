@@ -28,7 +28,7 @@
 
 #include <libopencm3/usb/usbd.h>
 
-#define CDCACM_PACKET_SIZE 	64
+#define CDCACM_PACKET_SIZE 	32
 
 extern usbd_device *usbdev;
 
