@@ -411,11 +411,9 @@ static const struct usb_config_descriptor config = {
 char serial_no[9];
 
 static const char *usb_strings[] = {
-	"Black Sphere Technologies",
-	BOARD_IDENT,
-	serial_no,
-	"Black Magic GDB Server",
-	"Black Magic UART Port",
+	"USART3 ->TX:PB10;->RX:PB11\n",
+	"USART2 ->TX:PA2;->RX:PA3\n",
+	"USART1 ->TX:PA9;->RX:PA10",
 };
 
 static int cdcacm_control_request(usbd_device *dev,
